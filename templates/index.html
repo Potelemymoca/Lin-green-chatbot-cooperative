@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>小林超市自助结账机</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        .container {
+            width: 900px;
+            margin: 60px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+        #chat {
+            border: 1px solid #ccc;
+            height: 320px;
+            padding: 20px;
+            font-size: 20px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex: 1;
+            font-size: 18px;
+            padding: 10px;
+        }
+        button {
+            font-size: 18px;
+            padding: 10px 30px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .consumer {
+            font-weight: bold;
+        }
+        .bot {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>小林超市自助结账机</h1>
+
+    <div id="chat"></div>
+
+    <div class="input-area">
+        <input id="msg" placeholder="请输入商品名称">
+        <button onclick="send()">发送</button>
+    </div>
+</div>
+
+<script>
+function send() {
+    let msg = document.getElementById("msg").value;
+    if (!msg) return;
+
+    let chat = document.getElementById("chat");
+    chat.innerHTML += "<p><span class='consumer'>消费者：</span> " + msg + "</p>";
+
+    fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            message: msg,
+            group: "{{ group }}"
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        chat.innerHTML += "<p><span class='bot'>小林智能助手：</span> " + data.reply + "</p>";
+        chat.scrollTop = chat.scrollHeight;
+    });
+
+    document.getElementById("msg").value = "";
+}
+</script>
+
+</body>
+</html>
