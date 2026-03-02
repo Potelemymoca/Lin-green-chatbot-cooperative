@@ -1,4 +1,4 @@
-GROUP_TYPE = "cooperative"
+GROUP_TYPE = "coop"
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
